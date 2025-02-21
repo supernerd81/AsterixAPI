@@ -1,9 +1,7 @@
 package de.supernerd.asterixapi;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -13,25 +11,19 @@ import java.util.List;
 @RequestMapping("/asterix")
 public class AsterixController {
 
-    private final AsterixCharacterRepository asterixCharacterRepository;
+    private final AsterixService asterixService;
 
     @GetMapping("/characters")
-    public List<Character> getCharacters() {
+    public List<ResponseCharacterDto> getCharacters() {
 
-        return asterixCharacterRepository.findAll();
-        /*return List.of(
-                new Character("1", "Asterix", 35, "Warrior"),
-                new Character("2", "Obelix", 35, "Supplier"),
-                new Character("3", "Miraculix", 60, "Druid"),
-                new Character("4", "Majestix", 60, "Chief"),
-                new Character("5", "Troubadix", 25, "Bard"),
-                new Character("6", "Gutemine", 35, "Chiefs Wife"),
-                new Character("7", "Idefix", 5, "Dog"),
-                new Character("8", "Geriatrix", 70, "Retiree"),
-                new Character("9", "Automatix", 35, "Smith"),
-                new Character("10", "Grockelix", 35, "Fisherman")
-        );*/
+        return asterixService.getAllCharacters().stream()
+                .map(character -> new ResponseCharacterDto(character.name(), character.age(), character.role()))
+                .toList();
     }
 
-
+    @PostMapping("/character")
+    public ResponseCharacterDto addCharacter(@RequestBody ResponseCharacterDto character) {
+        Character savedCharacter = asterixService.save(new Character(null, character.name(), character.age(), character.role()));
+        return new ResponseCharacterDto(savedCharacter.id(), savedCharacter.age(), savedCharacter.role());
+    }
 }
