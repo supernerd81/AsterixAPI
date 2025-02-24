@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class AsterixService {
 
     private final AsterixCharacterRepository asterixCharacterRepository;
+    private final IdService idService;
 
     public List<Character> getAllCharacters() {
 
@@ -21,8 +21,10 @@ public class AsterixService {
 
     public Character save(@RequestBody Character character) {
 
-        String uuid = UUID.randomUUID().toString();
+
+        String uuid = idService.randomId();
         Character characterToSave = character.withId(uuid);
+
 
         return asterixCharacterRepository.save(characterToSave);
     }

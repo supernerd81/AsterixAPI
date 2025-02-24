@@ -21,9 +21,9 @@ public class AsterixController {
                 .toList();
     }
 
-    @PostMapping("/character")
+    @PostMapping("/characters")
     public ResponseCharacterDto addCharacter(@RequestBody ResponseCharacterDto character) {
         Character savedCharacter = asterixService.save(new Character(null, character.name(), character.age(), character.role()));
-        return new ResponseCharacterDto(savedCharacter.id(), savedCharacter.age(), savedCharacter.role());
+        return new ResponseCharacterDto(savedCharacter.name(), savedCharacter.age(), savedCharacter.role());
     }
 }
